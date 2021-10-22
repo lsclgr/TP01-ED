@@ -9,7 +9,7 @@ int main() {
     inputPrassodia(&n, &prassodia);
     allocateCards(&cards, n);
     inputCardsVector(cards, n);
-    freeCards(&cards);
     printResult(operations(cards, prassodia, n));
+    freeCards(&cards);
     return 0;
 }

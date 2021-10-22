@@ -27,7 +27,7 @@ void inputCardsVector(Card *cards, int n) {
 }
 int operations(Card *cards, Card Prassodia, int n) {
     Card sum;
-    int aux = 0, aux2 = 0, win = 0;
+    int aux = 0, win = 0;
 
     for (int i = 0; i < n; i++) {
         if ((cards[i].attack >= Prassodia.attack) ||
@@ -38,52 +38,97 @@ int operations(Card *cards, Card Prassodia, int n) {
             sum.attack = cards[i].attack;
             sum.defense = cards[i].defense;
             sum.ability = cards[i].ability;
-
+            printf("\n%d\n", cards[i].ability);
+            printf(
+                "\nif 1 - soma ataque: %d soma defesa: %d soma habillidade: "
+                "%d\n",
+                sum.attack, sum.defense, sum.ability);
             for (int j = i + 1; j < n; j++) {
                 if ((cards[j].attack >= Prassodia.attack) ||
                     (cards[j].defense >= Prassodia.defense) ||
                     (cards[j].ability >= Prassodia.ability)) {
                     continue;
                 } else {
-                    aux2 = j;
-                    aux = ++aux2;
-                    while (aux2 < n) {
+                    aux = j;
+                    while (++aux < n) {
                         sum.attack = cards[i].attack + cards[j].attack;
                         sum.defense = cards[i].defense + cards[j].defense;
                         sum.ability = cards[i].ability + cards[j].ability;
-                        if ((cards[aux2].attack >= Prassodia.attack) ||
-                            (cards[aux2].defense >= Prassodia.defense) ||
-                            (cards[aux2].ability >= Prassodia.ability)) {
-                            aux2++;
-                        } else if (((sum.attack += cards[aux2].attack) <
-                                    Prassodia.attack) &&
-                                   ((sum.defense += cards[aux2].defense) <
-                                    Prassodia.defense) &&
-                                   ((sum.ability += cards[aux2].ability) <
-                                    Prassodia.ability)) {
-                            sum.attack += cards[aux2].attack;
-                            sum.defense += cards[aux2].defense;
-                            sum.ability += cards[aux2].ability;
-                            aux = ++aux2;
-                            while (aux < n) {
-                                if ((cards[aux].attack >= Prassodia.attack) ||
-                                    (cards[aux].defense >= Prassodia.defense) ||
-                                    (cards[aux].ability >= Prassodia.ability)) {
-                                    aux++;
-                                } else if ((sum.attack < Prassodia.attack) &&
-                                           (sum.defense < Prassodia.defense) &&
-                                           (sum.ability < Prassodia.ability)) {
-                                    sum.attack += cards[aux].attack;
-                                    sum.defense += cards[aux].defense;
-                                    sum.ability += cards[aux].ability;
-                                    aux++;
-                                } else if ((sum.attack = Prassodia.attack) &&
-                                           (sum.defense = Prassodia.defense) &&
-                                           (sum.ability = Prassodia.ability)) {
-                                    win = 1;
-                                    break;
-                                } else {
-                                    aux++;
+                        printf(
+                            "\nif 2 - soma ataque: %d soma defesa: %d soma "
+                            "habillidade: "
+                            "%d\n",
+                            sum.attack, sum.defense, sum.ability);
+                        if ((cards[aux].attack >= Prassodia.attack) ||
+                            (cards[aux].defense >= Prassodia.defense) ||
+                            (cards[aux].ability >= Prassodia.ability)) {
+                            continue;
+                        } else {
+                            if (((sum.attack + cards[aux].attack) <=
+                                 Prassodia.attack) &&
+                                ((sum.defense + cards[aux].defense) <=
+                                 Prassodia.defense) &&
+                                ((sum.ability + cards[aux].ability) <=
+                                 Prassodia.ability)) {
+                                toSum(&sum, cards[aux].attack,
+                                      cards[aux].defense, cards[aux].ability);
+                                printf(
+                                    "\nif 3 - soma ataque: %d soma defesa: %d "
+                                    "soma habillidade: "
+                                    "%d\n",
+                                    sum.attack, sum.defense, sum.ability);
+
+                                for (int k = j + 1; k < n; k++) {
+                                    if (k == aux) {
+                                        continue;
+                                    } else {
+                                        if ((cards[k].attack >=
+                                             Prassodia.attack) ||
+                                            (cards[k].defense >=
+                                             Prassodia.defense) ||
+                                            (cards[k].ability >=
+                                             Prassodia.ability)) {
+                                            continue;
+                                        } else if ((sum.attack <
+                                                    Prassodia.attack) &&
+                                                   (sum.defense <
+                                                    Prassodia.defense) &&
+                                                   (sum.ability <
+                                                    Prassodia.ability)) {
+                                            if (((sum.attack +
+                                                  cards[k].attack) <=
+                                                 Prassodia.attack) &&
+                                                ((sum.defense +
+                                                  cards[k].defense) <=
+                                                 Prassodia.defense) &&
+                                                ((sum.ability +
+                                                  cards[k].ability) <=
+                                                 Prassodia.ability)) {
+                                                toSum(&sum, cards[k].attack,
+                                                      cards[k].defense,
+                                                      cards[k].ability);
+                                                printf(
+                                                    "\nif 4 - soma ataque: %d "
+                                                    "soma defesa: %d soma "
+                                                    "habillidade: "
+                                                    "%d\n",
+                                                    sum.attack, sum.defense,
+                                                    sum.ability);
+                                            }
+                                            continue;
+                                        } else if ((sum.attack =
+                                                        Prassodia.attack) &&
+                                                   (sum.defense =
+                                                        Prassodia.defense) &&
+                                                   (sum.ability =
+                                                        Prassodia.ability)) {
+                                            win = 1;
+                                            break;
+                                        } else {
+                                            continue;
+                                        }
+                                    }
+                                    if (win == 1) break;
                                 }
                             }
                         }
@@ -106,4 +151,10 @@ void printResult(int value) {
         printf("Y\n");
     else
         printf("N\n");
+}
+
+void toSum(Card *sum, int a, int b, int c) {
+    sum->attack += a;
+    sum->defense += b;
+    sum->ability += c;
 }
